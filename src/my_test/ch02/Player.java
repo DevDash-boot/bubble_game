@@ -1,4 +1,4 @@
-package _test02;
+package my_test.ch02;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,13 +23,13 @@ public class Player extends JLabel implements Moveable {
     private boolean left;
     @Setter
     private boolean right;
+    @Setter
     private boolean up;
     private boolean down;
 
     public Player() {
         initData();
         setInitLayout();
-
     }
 
     private void initData() {
@@ -93,13 +93,54 @@ public class Player extends JLabel implements Moveable {
         }).start();
     }
 
+    // 점프 기능 구현해보기
     @Override
     public void up() {
+        up = true;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if(up){
+                    for (int i = 0; i < 30; i++) {
+                        y -= SPEED;
+                        setLocation(x, y);
+                        try {
+                            Thread.sleep(10);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
 
+                    for (int i = 0; i < 30; i++) {
+                        y += SPEED;
+                        setLocation(x, y);
+                        try {
+                            Thread.sleep(10);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+            }
+        }).start();
     }
 
     @Override
     public void down() {
-
+        down = true;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 10; i++) {
+                    y += SPEED;
+                    setLocation(x, y);
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }).start();
     }
 }

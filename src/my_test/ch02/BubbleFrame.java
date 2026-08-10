@@ -1,4 +1,4 @@
-package _test02;
+package my_test.ch02;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
@@ -48,8 +48,8 @@ public class BubbleFrame extends JFrame {
                     case KeyEvent.VK_RIGHT:
                         player.right();
                         break;
-                    case KeyEvent.VK_ESCAPE:
-                        player.setLocation(200, 511);
+                    case KeyEvent.VK_DOWN:
+                        player.down();
                         break;
                     default:
                         return;
@@ -61,7 +61,7 @@ public class BubbleFrame extends JFrame {
                 System.out.println("KeyReleased : " + e.getKeyCode());
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_UP:
-
+                        player.setUp(false);
                         break;
                     case KeyEvent.VK_LEFT:
                         // 왼쪽으로 가고 있다가 방향키를 떼면 while문을 멈추는 동작이 필요
