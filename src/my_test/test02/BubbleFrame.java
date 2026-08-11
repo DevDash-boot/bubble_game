@@ -1,4 +1,4 @@
-package _test02;
+package my_test.test02;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
@@ -40,24 +40,16 @@ public class BubbleFrame extends JFrame {
 
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_UP:
-                        // 점프 중이거나 낙하 중이면 무시(이중 점프 방지
-                        if (!player.isUp() && !player.isDown()) {
-                            player.up();
-                        }
+                        player.up();
                         break;
                     case KeyEvent.VK_LEFT:
-                        // 이미 왼쪽으로 이동 중이면 무시(스레드 중복 생성 방지)
-                        if (!player.isLeft()) {
-                            player.left();
-                        }
+                        player.left();
                         break;
                     case KeyEvent.VK_RIGHT:
-                        if (!player.isRight()) {
-                            player.right();
-                        }
+                        player.right();
                         break;
-                    case KeyEvent.VK_ESCAPE:
-                        player.setLocation(200, 511);
+                    case KeyEvent.VK_DOWN:
+                        player.down();
                         break;
                     default:
                         return;
@@ -69,7 +61,7 @@ public class BubbleFrame extends JFrame {
                 System.out.println("KeyReleased : " + e.getKeyCode());
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_UP:
-
+                        player.setUp(false);
                         break;
                     case KeyEvent.VK_LEFT:
                         // 왼쪽으로 가고 있다가 방향키를 떼면 while문을 멈추는 동작이 필요

@@ -1,9 +1,11 @@
-package my_test.ch02;
+package my_test.test02;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.swing.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 @Getter
 public class Player extends JLabel implements Moveable {
@@ -75,6 +77,9 @@ public class Player extends JLabel implements Moveable {
 
     @Override
     public void right() {
+        if(right){
+            return;
+        }
         right = true;
         setIcon(playerR);
         new Thread(new Runnable() {
@@ -88,7 +93,9 @@ public class Player extends JLabel implements Moveable {
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
+
                 }
+
             }
         }).start();
     }

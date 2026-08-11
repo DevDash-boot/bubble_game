@@ -1,4 +1,4 @@
-package _test02;
+package _test04;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
@@ -12,7 +12,10 @@ public class BubbleFrame extends JFrame {
         initData();
         setInitLayout();
         addEventListener();
-        setVisible(true);
+
+        // 플레이어의 위치에 따라 픽셀을 감지하는 백그라운드 서비스 객체 생성
+        new Thread(new BackgroundPlayerService(player)).start();
+
     }
 
     private void initData() {
@@ -29,6 +32,7 @@ public class BubbleFrame extends JFrame {
         setResizable(false);    // 마우스로 크기조정 불가
         setLocationRelativeTo(null);    // JFrame을 화면 가운데 배치
         add(player);
+        setVisible(true);
     }
 
     private void addEventListener() {
@@ -36,8 +40,6 @@ public class BubbleFrame extends JFrame {
         this.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                System.out.println("KeyCode : " + e.getKeyCode());
-
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_UP:
                         // 점프 중이거나 낙하 중이면 무시(이중 점프 방지
@@ -47,17 +49,18 @@ public class BubbleFrame extends JFrame {
                         break;
                     case KeyEvent.VK_LEFT:
                         // 이미 왼쪽으로 이동 중이면 무시(스레드 중복 생성 방지)
-                        if (!player.isLeft()) {
+                        if (!player.isLeft() && !player.isLeftWallCrash()) {
                             player.left();
                         }
                         break;
                     case KeyEvent.VK_RIGHT:
-                        if (!player.isRight()) {
+                        if (!player.isRight() && !player.isRightWallCrash()) {
                             player.right();
                         }
                         break;
-                    case KeyEvent.VK_ESCAPE:
-                        player.setLocation(200, 511);
+                    case KeyEvent.VK_SPACE:
+                        System.out.println("스페이스바 이벤트");
+                        player.fireBubble(BubbleFrame.this);
                         break;
                     default:
                         return;
@@ -66,10 +69,8 @@ public class BubbleFrame extends JFrame {
 
             @Override
             public void keyReleased(KeyEvent e) {
-                System.out.println("KeyReleased : " + e.getKeyCode());
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_UP:
-
                         break;
                     case KeyEvent.VK_LEFT:
                         // 왼쪽으로 가고 있다가 방향키를 떼면 while문을 멈추는 동작이 필요
