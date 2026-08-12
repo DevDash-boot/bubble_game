@@ -134,12 +134,6 @@ public class Player extends JLabel implements Moveable {
         Bubble bubble = new Bubble(this);
         // Player의 add가 아니라 상위 개념인 Frame의 add 메서드를 호출 시켜야 한다.
         bubbleFrame.add(bubble);    // 의존 관계
-
-        // 공격 시 앞으로 나가며, 올라가게 하기
-
-
-
-
     }
 
 

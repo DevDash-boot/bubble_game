@@ -1,4 +1,4 @@
-package my_test.test04;
+package _test05;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
@@ -7,14 +7,14 @@ import java.awt.event.KeyEvent;
 public class BubbleFrame extends JFrame {
     private JLabel backgroundMap;
     private Player player;
-    private Bubble bubble;
+
     public BubbleFrame() {
         initData();
         setInitLayout();
         addEventListener();
 
         // 플레이어의 위치에 따라 픽셀을 감지하는 백그라운드 서비스 객체 생성
-        new Thread(new BackgroundPlayerService(player,bubble)).start();
+        new Thread(new BackgroundPlayerService(player)).start();
 
     }
 

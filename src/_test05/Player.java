@@ -1,4 +1,4 @@
-package my_test.test04;
+package _test05;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -33,6 +33,12 @@ public class Player extends JLabel implements Moveable {
     @Setter
     private boolean rightWallCrash;
 
+    // 플레이어의 방향 상태
+    private PlayerWay playerWay;
+    // 왼쪽 / 오른쪽 이벤트가 들어오면 상태값을 계속 변경
+
+
+
     public Player() {
         initData();
         setInitLayout();
@@ -56,11 +62,13 @@ public class Player extends JLabel implements Moveable {
         this.setSize(50, 50); // this는 JLabel
         setLocation(x, y);
         setIcon(playerR);
+
     }
 
     @Override
     public void left() {
         left = true;
+        playerWay = PlayerWay.LEFT;
         setIcon(playerL);
         new Thread(() -> {
             while (left) {
@@ -78,6 +86,7 @@ public class Player extends JLabel implements Moveable {
     @Override
     public void right() {
         right = true;
+        playerWay = PlayerWay.RIGHT;
         setIcon(playerR);
         new Thread(() -> {
             while (right) {
@@ -129,10 +138,9 @@ public class Player extends JLabel implements Moveable {
     }
 
     // 물방울 발사
-    public void fireBubble(BubbleFrame bubbleFrame){
+    public void fireBubble(BubbleFrame bubbleFrame) {
         Bubble bubble = new Bubble(this);
         // Player의 add가 아니라 상위 개념인 Frame의 add 메서드를 호출 시켜야 한다.
         bubbleFrame.add(bubble);    // 의존 관계
-        bubble.moveBubble();
     }
 }

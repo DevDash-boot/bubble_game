@@ -1,4 +1,4 @@
-package my_test.test04;
+package _test05;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -15,11 +15,11 @@ public class BackgroundPlayerService implements Runnable {
     // BufferedImage에서 제공하는 getRGB(x, y)로 특정 좌표의 색상 값을 직접 읽을 수 있다.
     private BufferedImage image;
     private Player player;  // BubbleFrame에서 생성되어 있는 Player
-    private Bubble bubble;
+
     // 생성자 주입(DI : Dependency Injection)
-    public BackgroundPlayerService(Player player, Bubble bubble) {
+    public BackgroundPlayerService(Player player) {
         this.player = player;
-        this.bubble = bubble;
+
         try {
             image = ImageIO.read(new File("images/BackgroundMapService.png"));
         } catch (IOException e) {
@@ -27,7 +27,6 @@ public class BackgroundPlayerService implements Runnable {
             throw new RuntimeException(e);
         }
     }
-
 
     @Override
     public void run() {
@@ -44,7 +43,6 @@ public class BackgroundPlayerService implements Runnable {
                 // 현재 플레이어가 왼쪽 벽에 충돌된 상태
                 player.setLeftWallCrash(true);
                 player.setLeft(false); // 움직임 해제
-
             } else {
                 player.setLeftWallCrash(false);
             }
@@ -64,9 +62,12 @@ public class BackgroundPlayerService implements Runnable {
                 throw new RuntimeException(e);
             }
         }
+
     }
 
     private boolean isRed(Color color) {
         return color.getRed() == 255 && color.getGreen() == 0 && color.getBlue() == 0;
     }
+
+
 }
