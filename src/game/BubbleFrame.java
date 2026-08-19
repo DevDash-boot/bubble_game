@@ -1,131 +1,69 @@
-package my_test.test07;
+package game;
+
+import game.components.Player;
+import game.service.BackgroundPlayerService;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 
 public class BubbleFrame extends JFrame {
-
     private JLabel backgroundMap;
-
     private Player player;
 
-    // Enemy 목록
-    private ArrayList<Enemy> enemies = new ArrayList<>();
-
     public BubbleFrame() {
-
         initData();
         setInitLayout();
         addEventListener();
 
-        // Player의 벽 / 바닥 충돌 감지
+        // 플레이어의 위치에 따라 픽셀을 감지하는 백그라운드 서비스 객체 생성
         new Thread(new BackgroundPlayerService(player)).start();
     }
 
     private void initData() {
-
         setTitle("버블버블");
-
         setSize(1000, 640);
-
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-        backgroundMap =
-                new JLabel(new ImageIcon("images/backgroundMap.png"));
-
-        // JFrame의 배경을 backgroundMap으로 사용
-        setContentPane(backgroundMap);
-
+        backgroundMap = new JLabel(new ImageIcon("images/backgroundMap.png"));
+        setContentPane(backgroundMap);  // root 패널에 JLabel 넣기
         player = new Player();
-
-        // =========================
-        // Enemy 생성
-        // =========================
-
-        Enemy enemy1 = new Enemy(200, 105);
-        Enemy enemy2 = new Enemy(500, 185);
-        Enemy enemy3 = new Enemy(700, 265);
-
-        enemies.add(enemy1);
-        enemies.add(enemy2);
-        enemies.add(enemy3);
     }
 
     private void setInitLayout() {
-
-        // 좌표 기반 배치
-        setLayout(null);
-
-        // 창 크기 변경 방지
-        setResizable(false);
-
-        // 화면 가운데 배치
-        setLocationRelativeTo(null);
-
-        // Player 추가
+        setLayout(null);    // 좌표기반
+        setResizable(false);    // 마우스로 크기조정 불가
+        setLocationRelativeTo(null);    // JFrame을 화면 가운데 배치
         add(player);
-
-        // Enemy 추가
-        for (Enemy enemy : enemies) {
-            add(enemy);
-        }
-
         setVisible(true);
     }
 
     private void addEventListener() {
-
+        // 프레임에 키보드 리스너 등록
         this.addKeyListener(new KeyAdapter() {
-
             @Override
             public void keyPressed(KeyEvent e) {
-
                 switch (e.getKeyCode()) {
-
                     case KeyEvent.VK_UP:
-
-                        // 점프 중이거나 낙하 중이면 무시
+                        // 점프 중이거나 낙하 중이면 무시(이중 점프 방지
                         if (!player.isUp() && !player.isDown()) {
                             player.up();
                         }
-
                         break;
-
                     case KeyEvent.VK_LEFT:
-
-                        // 이미 왼쪽 이동 중이 아니고
-                        // 왼쪽 벽에 충돌하지 않았다면 이동
-                        if (!player.isLeft()
-                                && !player.isLeftWallCrash()) {
-
+                        // 이미 왼쪽으로 이동 중이면 무시(스레드 중복 생성 방지)
+                        if (!player.isLeft() && !player.isLeftWallCrash()) {
                             player.left();
                         }
-
                         break;
-
                     case KeyEvent.VK_RIGHT:
-
-                        // 이미 오른쪽 이동 중이 아니고
-                        // 오른쪽 벽에 충돌하지 않았다면 이동
-                        if (!player.isRight()
-                                && !player.isRightWallCrash()) {
-
+                        if (!player.isRight() && !player.isRightWallCrash()) {
                             player.right();
                         }
-
                         break;
-
                     case KeyEvent.VK_SPACE:
-
                         System.out.println("스페이스바 이벤트");
-
-                        // Enemy 목록을 Bubble에게 전달
                         player.fireBubble(BubbleFrame.this);
-
                         break;
-
                     default:
                         return;
                 }
@@ -133,38 +71,24 @@ public class BubbleFrame extends JFrame {
 
             @Override
             public void keyReleased(KeyEvent e) {
-
                 switch (e.getKeyCode()) {
-
-                    case KeyEvent.VK_LEFT:
-
-                        // 왼쪽 이동 중지
-                        player.setLeft(false);
-
-                        break;
-
-                    case KeyEvent.VK_RIGHT:
-
-                        // 오른쪽 이동 중지
-                        player.setRight(false);
-
-                        break;
-
                     case KeyEvent.VK_UP:
-
+                        break;
+                    case KeyEvent.VK_LEFT:
+                        // 왼쪽으로 가고 있다가 방향키를 떼면 while문을 멈추는 동작이 필요
+                        player.setLeft(false); // 돌아가고 있던 while 문이 while문이 false 되어서 멈추게 된다.
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        // 오른쪽으로 가고 있다가 방향키를 떼면 while문을 멈추는 동작이 필요
+                        player.setRight(false);
                         break;
                 }
             }
         });
     }
 
-    // Bubble에서 Enemy 목록을 가져가기 위한 getter
-    public ArrayList<Enemy> getEnemies() {
-        return enemies;
-    }
-
+    // Test 코드 작성
     public static void main(String[] args) {
-
         new BubbleFrame();
     }
 }
